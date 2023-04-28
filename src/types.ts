@@ -18,6 +18,7 @@ export interface Restaurant {
   restaurant: Info;
 }
 
+// Ver si conviene unificsar estas intefaces
 export interface Place {
   formatted_address: string;
   id: string;
@@ -28,10 +29,20 @@ export interface Place {
     };
   };
 }
+export interface Position {
+  coords: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
+export interface ErrorState {
+  hasError: boolean;
+  message: string;
+}
 
 export interface Location {
   lat: number;
   lng: number;
-  address: string;
-  id: string;
+  address?: string;
 }
