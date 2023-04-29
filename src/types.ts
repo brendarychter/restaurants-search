@@ -42,7 +42,7 @@ export interface ErrorState {
 }
 
 export interface Location {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
   address?: string;
 }
