@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Autocomplete from 'react-google-autocomplete';
 import { Location, Place, Position, ErrorState } from 'types';
 import { Button, CircularProgress, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchContainer() {
   const [location, setLocation] = useState<Location | null>(null);
@@ -11,17 +12,18 @@ export default function SearchContainer() {
     message: ''
   });
   const API_KEY = import.meta.env.VITE_REACT_GOOGLE_MAPS_API_KEY;
+  const navigate = useNavigate();
 
   const getCurrentLocation = () => {
     setLoader(true);
-    // move to utils
+
     setError({
       hasError: false,
       message: ''
     });
 
     const success = ({ coords }: Position) => {
-      getAddressByCurrentLocation(coords)
+      getAddressByCurrentLocation(coords);
       setLoader(false);
     };
 
@@ -61,6 +63,12 @@ export default function SearchContainer() {
     });
   };
 
+  useEffect(() => {
+    console.log(location)
+    if (location) {
+      navigate('/search', { state: location });
+    }
+  }, [location]);
 
   return (
     <>
