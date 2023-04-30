@@ -11,7 +11,7 @@ export type Info = {
   type?: string;
   reviews: Review[];
   id: string;
-  score: number;
+  rating: number;
 };
 
 export interface Restaurant {
@@ -21,7 +21,7 @@ export interface Restaurant {
 // Ver si conviene unificsar estas intefaces
 export interface Place {
   formatted_address: string;
-  id: string;
+  place_id: string;
   geometry: {
     location: {
       lat: () => number;
@@ -45,4 +45,5 @@ export interface Location {
   latitude: number;
   longitude: number;
   address?: string;
+  place_id?: string;
 }
