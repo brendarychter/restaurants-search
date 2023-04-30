@@ -1,18 +1,44 @@
-import { Restaurant } from "@utils/types";
-import { Card, Typography, CardContent, Button, CardActions } from '@mui/material';
+import { Restaurant } from '@utils/types';
+import {
+  Card,
+  Typography,
+  CardContent,
+  Button,
+  CardActions,
+  Rating
+} from '@mui/material';
+import { Star } from '@mui/icons-material';
 
-const RestaurantCard: React.FC<Restaurant> = ({
-  restaurant: { name, rating }
-}) => {
+const RestaurantCard = ({
+  name,
+  rating,
+  address,
+  place_id,
+  photo,
+  type
+}: Restaurant): JSX.Element => {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="body1" component="div">
           {name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {rating}
+        <Typography gutterBottom variant="body2" component="div">
+          {address}
         </Typography>
+        {type && (
+          <Typography gutterBottom variant="body2" component="div">
+            {type}
+          </Typography>
+        )}
+
+        <Rating
+          name="text-feedback"
+          value={rating}
+          readOnly
+          precision={0.5}
+          emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+        />
       </CardContent>
       <CardActions>
         <Button size="small">See more</Button>

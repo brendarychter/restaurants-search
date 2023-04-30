@@ -4,21 +4,27 @@ type Review = {
   id: string;
 };
 
-export type Info = {
+export interface GmapsRestaurantData  {
   name: string;
-  address: string;
-  picture?: string;
-  type?: string;
-  reviews: Review[];
-  id: string;
+  types?: string[];
+  photos?: any[];
   rating: number;
-};
-
-export interface Restaurant {
-  restaurant: Info;
+  vicinity: string;
+  place_id: string;
 }
 
-// Ver si conviene unificsar estas intefaces
+
+export interface Restaurant {
+  name: string;
+  address: string;
+  photo?: string | undefined;
+  type?: string | undefined;
+  reviews?: Review[];
+  place_id: string;
+  rating: number;
+}
+export type RestaurantsList = Restaurant[];
+
 export interface Place {
   formatted_address: string;
   place_id: string;
