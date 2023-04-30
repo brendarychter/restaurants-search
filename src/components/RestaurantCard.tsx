@@ -1,4 +1,4 @@
-import { Restaurant } from "src/utils/types";
+import { Restaurant } from "@utils/types";
 import { Card, Typography, CardContent, Button, CardActions } from '@mui/material';
 
 const RestaurantCard: React.FC<Restaurant> = ({
