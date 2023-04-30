@@ -1,5 +1,5 @@
-import { Location } from 'types';
-import { API_KEY } from '../utils/config';
+import { API_KEY } from '../utils/config'
+import { Location } from '@utils/types';
 
 export const getAddressByCurrentLocation = async ({
   latitude,

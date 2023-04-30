@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Autocomplete from 'react-google-autocomplete';
-import { Location, Place, Position, ErrorState } from 'types';
+import { Location, Place, Position, ErrorState } from '@utils/types';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -47,7 +47,7 @@ export default function SearchContainer() {
         address: place.formatted_address,
         place_id: place.place_id
       });
-    }else{
+    } else {
       setError({
         hasError: true,
         message: 'Location not found'
