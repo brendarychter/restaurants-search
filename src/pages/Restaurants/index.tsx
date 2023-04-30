@@ -9,13 +9,14 @@ export default function RestaurantFinder() {
   const API_KEY = import.meta.env.VITE_REACT_GOOGLE_MAPS_API_KEY;
 
   const getClosestRestaurantsByLocation = async () => {
-    // const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.latitude},${location?.longitude}&radius=1500&type=restaurant&key=${API_KEY}`;
-    // const res = await fetch(url);
-    // // const data = await res.json();
-    // if (data && data.results && data.results.length > 0) {
-    //   console.log(data.results);
-    // }
+    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${state.latitude},${state.longitude}&radius=1500&type=restaurant&key=${API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data && data.results && data.results.length > 0) {
+      console.log(data.results);
+    }
   };
+
 
   useEffect(() => {
     getClosestRestaurantsByLocation();
