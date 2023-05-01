@@ -11,16 +11,26 @@ export const getAddressByCurrentLocation = async ({
   latitude,
   longitude
 }: Location) => {
-  const CURRENT_LOCATION_URL = `${GOOGLE_API_ENDPOINT}/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
-  const response = await fetch(CURRENT_LOCATION_URL);
-  const data = await response.json();
-  if (data && data.results && data.results.length > 0) {
-    return {
-      latitude,
-      longitude,
-      address: data.results[0].formatted_address as string,
-      place_id: data.results[0].place_id as string
-    };
+  try {
+    const CURRENT_LOCATION_URL = `${GOOGLE_API_ENDPOINT}/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
+    const response = await fetch(CURRENT_LOCATION_URL);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (data && data.results && data.results.length > 0) {
+      return {
+        latitude,
+        longitude,
+        address: data.results[0].formatted_address as string,
+        place_id: data.results[0].place_id as string
+      };
+    } else {
+      throw new Error('No results found');
+    }
+  } catch (error) {
+    console.error('Error fetching current location address:', error);
+    throw error;
   }
 };
 
@@ -38,10 +48,14 @@ const sortByHighestReview = (data: GmapsRestaurantData[]) => {
   return data.slice(0, 10).sort((a, b) => b.rating - a.rating);
 };
 
-const extractProps = async (data: GmapsRestaurantData[]): Promise<RestaurantsList> => {
+const extractProps = async (
+  data: GmapsRestaurantData[]
+): Promise<RestaurantsList> => {
   const restaurants = data.map(async (res: GmapsRestaurantData) => {
     const { name, vicinity, types, photos, rating, place_id } = res;
-    const photo = photos?.length ? getPhotoUrl(photos[0].photo_reference) : undefined;
+    const photo = photos?.length
+      ? getPhotoUrl(photos[0].photo_reference)
+      : undefined;
     const reviews = await getReviews(place_id);
     return {
       name,
@@ -54,8 +68,6 @@ const extractProps = async (data: GmapsRestaurantData[]): Promise<RestaurantsLis
     } as Restaurant;
   });
   return Promise.all(restaurants);
-
-
 };
 
 export const getClosestRestaurantsByLocation = async ({
@@ -63,12 +75,18 @@ export const getClosestRestaurantsByLocation = async ({
   longitude
 }: Location) => {
   const NEARBY_SEARCH_URL = `https://cors-anywhere.herokuapp.com/${GOOGLE_API_ENDPOINT}/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=restaurant&key=${API_KEY}`;
-
-  const res = await fetch(NEARBY_SEARCH_URL);
-  const data = await res.json();
-  if (data && data.results && data.results.length > 0) {
-    const filteredData = sortByHighestReview(data.results);
-    return extractProps(filteredData);
+  try {
+    const res = await fetch(NEARBY_SEARCH_URL);
+    const data = await res.json();
+    if (data && data.results && data.results.length > 0) {
+      const filteredData = sortByHighestReview(data.results);
+      return extractProps(filteredData);
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching nearby restaurants:', error);
+    throw error;
   }
 };
 
@@ -76,6 +94,9 @@ export const getPhotoUrl = async (ref: string) => {
   const PHOTO_URL = `https://cors-anywhere.herokuapp.com/${GOOGLE_API_ENDPOINT}/place/photo?maxwidth=400&photo_reference=${ref}&key=${API_KEY}`;
   try {
     const response = await fetch(PHOTO_URL);
+    if (!response.ok) {
+      throw new Error('Unable to fetch restaurant photo');
+    }
     const blob = await response.blob();
     return URL.createObjectURL(blob);
   } catch (error) {
@@ -85,19 +106,22 @@ export const getPhotoUrl = async (ref: string) => {
 };
 
 export const getReviews = async (place_id: string) => {
-  const url = `https://cors-anywhere.herokuapp.com/${GOOGLE_API_ENDPOINT}/place/details/json?place_id=${place_id}&key=${API_KEY}`;
+  const REVIEWS_URL = `https://cors-anywhere.herokuapp.com/${GOOGLE_API_ENDPOINT}/place/details/json?place_id=${place_id}&key=${API_KEY}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(REVIEWS_URL);
     const data = await response.json();
     const reviews = data.result?.reviews;
     if (reviews && reviews.length > 0) {
-      return reviews.slice(0, 10).map(({ author_name, text, rating }: Review) => {
-        return { author_name, text, rating };
-      });
-    } else {
-      return [];
+      return reviews
+        .slice(0, 10)
+        .map(({ author_name, text, rating }: Review) => {
+          return { author_name, text, rating };
+        });
     }
+    //  else {
+    //   return [];
+    // }
   } catch (error) {
     console.error('Error fetching restaurant photo:', error);
     throw error;

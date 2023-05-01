@@ -4,15 +4,23 @@ import { Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getClosestRestaurantsByLocation } from '../../api/userController';
-import { RestaurantsList, Review } from '@utils/types';
+import { RestaurantsList } from '@utils/types';
 
 export default function RestaurantFinder() {
   const { state } = useLocation();
   const [restaurants, setRestaurants] = useState<RestaurantsList>();
+  //Add loader
+  const [loader, setLoader] = useState<boolean>(false);
 
   const getRestaurants = async () => {
-    setRestaurants(await getClosestRestaurantsByLocation(state));
+    try {
+      setRestaurants(await getClosestRestaurantsByLocation(state));
+    } catch (error) {
+      console.error('Error fetching restaurants:', error);
+      setRestaurants([]);
+    }
   };
+  
 
   useEffect(() => {
     getRestaurants();
@@ -27,7 +35,7 @@ export default function RestaurantFinder() {
       </Typography>
 
       {restaurants?.map(
-        ({ name, rating, address, place_id, type, photo, reviews }) => (
+        ({ name, rating, address, place_id }) => (
           <>
             <RestaurantCard
               name={name}

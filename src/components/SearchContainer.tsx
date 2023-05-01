@@ -27,8 +27,15 @@ export default function SearchContainer() {
     });
 
     const success = async ({ coords }: Position) => {
-      setLocation(await getAddressByCurrentLocation(coords));
-      setLoader(false);
+      try {
+        const location = await getAddressByCurrentLocation(coords);
+        setLocation(location);
+      } catch (error) {
+        console.error('Error setting current location:', error);
+        // handle error
+      } finally {
+        setLoader(false);
+      }
     };
 
     const error = (err: GeolocationPositionError) => {
