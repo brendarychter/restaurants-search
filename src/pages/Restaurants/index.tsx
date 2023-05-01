@@ -1,8 +1,9 @@
 import SearchContainer from '../../components/SearchContainer';
 import RestaurantCard from '../../components/RestaurantCard';
-import { Typography } from '@mui/material';
+import { Theme, Typography, CircularProgress } from '@mui/material';
 import { useEffect } from 'react';
 import { getClosestRestaurantsByLocation } from '../../api/userController';
+import Backdrop from '@mui/material/Backdrop';
 import {
   getRestaurantsStart,
   getRestaurantsFailure,
@@ -15,47 +16,63 @@ export default function RestaurantFinder() {
   const dispatch = useDispatch();
   const location = useSelector((state: RootState) => state.location.data);
 
-  const { data } = useSelector(
+  const { data, loading } = useSelector(
     (state: RootState) => state.restaurants
   );
 
-  const getRestaurants = async () => {
-    dispatch(getRestaurantsStart());
-    try {
-      dispatch(
-        getRestaurantsSuccess(
-          await getClosestRestaurantsByLocation({ latitude: 0, longitude: 0 })
-        )
-      );
-    } catch (error) {
-      dispatch(getRestaurantsFailure(`Error fetching restaurants: ${error}`));
-    }
-  };
-
   useEffect(() => {
+    // TODO: Check if I can use useCallback
+    const getRestaurants = async () => {
+      dispatch(getRestaurantsStart());
+      try {
+        location &&
+          dispatch(
+            getRestaurantsSuccess(
+              await getClosestRestaurantsByLocation(location)
+            )
+          );
+      } catch (error) {
+        dispatch(getRestaurantsFailure(`Error fetching restaurants: ${error}`));
+      }
+    };
     getRestaurants();
-    console.log('location: ', location);
-  }, [location]);
+  }, [location, dispatch]);
 
   return (
     <>
       <SearchContainer></SearchContainer>
-
-      <Typography gutterBottom variant="h5" component="div">
-        {/* {location.address} */}
-      </Typography>
-      {location && location.address}
-      {location &&
-        data?.map(({ name, rating, address, place_id }) => (
-          <>
-            <RestaurantCard
-              name={name}
-              rating={rating}
-              address={address}
-              place_id={place_id}
-            />
-          </>
-        ))}
+      {loading ? (
+        <>
+          <Backdrop
+          // TODO: Componentize this
+            sx={{
+              color: '#fff',
+              zIndex: (theme: Theme) => theme.zIndex.drawer + 1
+            }}
+            open={loading}
+            onClick={() => !loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </>
+      ) : (
+        <>
+          <Typography gutterBottom variant="h5" component="div">
+            {location?.address}
+          </Typography>
+          {location &&
+            data?.map(({ name, rating, address, place_id }) => (
+              <>
+                <RestaurantCard
+                  name={name}
+                  rating={rating}
+                  address={address}
+                  place_id={place_id}
+                />
+              </>
+            ))}
+        </>
+      )}
 
       {/* <ModalReviews data={data}></ModalReviews> */}
     </>

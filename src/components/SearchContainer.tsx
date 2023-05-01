@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, CircularProgress, Typography } from '@mui/material';
+import { Button, CircularProgress, Theme, Typography } from '@mui/material';
+import Backdrop from '@mui/material/Backdrop';
 import Autocomplete from 'react-google-autocomplete';
 import {
   getLocationSuccess,
@@ -15,9 +16,7 @@ import { API_KEY } from '../utils/config';
 export default function SearchContainer() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector(
-    (state: RootState) => state.location
-  );
+  const { loading, error } = useSelector((state: RootState) => state.location);
 
   const getCurrentLocation = () => {
     dispatch(getLocationStart());
@@ -53,7 +52,7 @@ export default function SearchContainer() {
       dispatch(getLocationFailure('Location not found'));
     }
   };
-
+  
   return (
     <>
       <Autocomplete
@@ -61,17 +60,24 @@ export default function SearchContainer() {
         apiKey={API_KEY}
         onPlaceSelected={placeSelection}
         placeholder="Enter a city or an address"
+        inputAutocompleteValue=''
         options={{
           types: ['geocode']
         }}
       />
       <Button variant="text" onClick={getCurrentLocation}>
-        {loading ? (
-          <CircularProgress size={24} color="inherit" />
-        ) : (
-          'Use my current location'
-        )}
+        Use my current location
       </Button>
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme: Theme) => theme.zIndex.drawer + 1
+        }}
+        open={loading}
+        onClick={() => !loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {error && <Typography color="error">{error}</Typography>}
     </>
   );

@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Restaurant } from '@utils/types';
 
 interface RestaurantsState {
-  data: Restaurant[] | null;
+  data: Restaurant[] | undefined;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: RestaurantsState = {
-  data: [],
+  data: undefined,
   loading: false,
   error: null
 };
