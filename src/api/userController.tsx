@@ -34,16 +34,6 @@ export const getAddressByCurrentLocation = async ({
   }
 };
 
-export const getLocationError = (err: GeolocationPositionError) => {
-  return {
-    hasError: true,
-    message:
-      err.code === err.PERMISSION_DENIED
-        ? 'User denied permission to access location'
-        : `Error while accessing user location: ${err.message}`
-  };
-};
-
 const sortByHighestReview = (data: GmapsRestaurantData[]) => {
   return data.slice(0, 10).sort((a, b) => b.rating - a.rating);
 };

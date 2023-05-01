@@ -10,14 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/react": "^11.10.8",
+    "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "^5.11.16",
+    "@mui/joy": "^5.0.0-alpha.77",
     "@mui/material": "^5.12.2",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@types/react-router-dom": "^5.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.3",
-    "react-router-dom": "^6.10.0"
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.11.0",
+    "redux": "^4.2.1"
   },
   "devDependencies": {
     "@types/node": "^18.16.3",

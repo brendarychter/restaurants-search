@@ -1,46 +1,38 @@
-import { useState, useEffect } from 'react';
-import Autocomplete from 'react-google-autocomplete';
-import { Location, Place, Position, ErrorState } from '@utils/types';
-import { Button, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from 'store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, CircularProgress, Typography } from '@mui/material';
+import Autocomplete from 'react-google-autocomplete';
 import {
-  getLocationError,
-  getAddressByCurrentLocation
-} from '../api/userController';
+  getLocationSuccess,
+  getLocationStart,
+  getLocationFailure
+} from '../features/location/locationSlice';
+import { Place, Position } from '@utils/types';
+import { getAddressByCurrentLocation } from '../api/userController';
 import { API_KEY } from '../utils/config';
 
 export default function SearchContainer() {
-  const [location, setLocation] = useState<Location | undefined>(undefined);
-  const [loader, setLoader] = useState<boolean>(false);
-  const [error, setError] = useState<ErrorState>({
-    hasError: false,
-    message: ''
-  });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.location
+  );
 
   const getCurrentLocation = () => {
-    setLoader(true);
-
-    setError({
-      hasError: false,
-      message: ''
-    });
-
+    dispatch(getLocationStart());
     const success = async ({ coords }: Position) => {
       try {
-        const location = await getAddressByCurrentLocation(coords);
-        setLocation(location);
+        dispatch(getLocationSuccess(await getAddressByCurrentLocation(coords)));
+        navigate(`/search`);
       } catch (error) {
-        console.error('Error setting current location:', error);
-        // handle error
-      } finally {
-        setLoader(false);
+        dispatch(
+          getLocationFailure(`Error setting current location: ${error}`)
+        );
       }
     };
-
     const error = (err: GeolocationPositionError) => {
-      setLoader(false);
-      setError(getLocationError(err));
+      dispatch(getLocationFailure(err.message));
     };
 
     navigator?.geolocation?.getCurrentPosition(success, error);
@@ -48,25 +40,19 @@ export default function SearchContainer() {
 
   const placeSelection = (place: Place) => {
     if (place && place.geometry) {
-      setLocation({
-        latitude: place.geometry.location.lat(),
-        longitude: place.geometry.location.lng(),
-        address: place.formatted_address,
-        place_id: place.place_id
-      });
+      dispatch(
+        getLocationSuccess({
+          latitude: place.geometry.location.lat(),
+          longitude: place.geometry.location.lng(),
+          address: place.formatted_address,
+          place_id: place.place_id
+        })
+      );
+      navigate(`/search`);
     } else {
-      setError({
-        hasError: true,
-        message: 'Location not found'
-      });
+      dispatch(getLocationFailure('Location not found'));
     }
   };
-
-  useEffect(() => {
-    if (location) {
-      navigate('/search', { state: location });
-    }
-  }, [location]);
 
   return (
     <>
@@ -80,13 +66,13 @@ export default function SearchContainer() {
         }}
       />
       <Button variant="text" onClick={getCurrentLocation}>
-        {loader ? (
+        {loading ? (
           <CircularProgress size={24} color="inherit" />
         ) : (
           'Use my current location'
         )}
       </Button>
-      {error.hasError && <Typography color="error">{error.message}</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
     </>
   );
 }

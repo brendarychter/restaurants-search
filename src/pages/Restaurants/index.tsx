@@ -1,41 +1,52 @@
 import SearchContainer from '../../components/SearchContainer';
 import RestaurantCard from '../../components/RestaurantCard';
 import { Typography } from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { getClosestRestaurantsByLocation } from '../../api/userController';
-import { RestaurantsList } from '@utils/types';
+import {
+  getRestaurantsStart,
+  getRestaurantsFailure,
+  getRestaurantsSuccess
+} from '../../features/restaurants/restaurantsSlice';
+import { RootState } from 'store/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function RestaurantFinder() {
-  const { state } = useLocation();
-  const [restaurants, setRestaurants] = useState<RestaurantsList>();
-  //Add loader
-  const [loader, setLoader] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const location = useSelector((state: RootState) => state.location.data);
+
+  const { data } = useSelector(
+    (state: RootState) => state.restaurants
+  );
 
   const getRestaurants = async () => {
+    dispatch(getRestaurantsStart());
     try {
-      setRestaurants(await getClosestRestaurantsByLocation(state));
+      dispatch(
+        getRestaurantsSuccess(
+          await getClosestRestaurantsByLocation({ latitude: 0, longitude: 0 })
+        )
+      );
     } catch (error) {
-      console.error('Error fetching restaurants:', error);
-      setRestaurants([]);
+      dispatch(getRestaurantsFailure(`Error fetching restaurants: ${error}`));
     }
   };
-  
 
   useEffect(() => {
     getRestaurants();
-  }, [state]);
+    console.log('location: ', location);
+  }, [location]);
 
   return (
     <>
       <SearchContainer></SearchContainer>
 
       <Typography gutterBottom variant="h5" component="div">
-        {state.address}
+        {/* {location.address} */}
       </Typography>
-
-      {restaurants?.map(
-        ({ name, rating, address, place_id }) => (
+      {location && location.address}
+      {location &&
+        data?.map(({ name, rating, address, place_id }) => (
           <>
             <RestaurantCard
               name={name}
@@ -44,8 +55,7 @@ export default function RestaurantFinder() {
               place_id={place_id}
             />
           </>
-        )
-      )}
+        ))}
 
       {/* <ModalReviews data={data}></ModalReviews> */}
     </>
