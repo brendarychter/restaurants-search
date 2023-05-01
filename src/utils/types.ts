@@ -1,27 +1,28 @@
-type Review = {
-  username?: string;
+export type Review = {
+  author_name: string;
   text: string;
+  rating: number;
   id: string;
 };
+export type Reviews = Review[];
 
 export interface GmapsRestaurantData  {
   name: string;
   types?: string[];
-  photos?: any[];
+  photos?: any;
   rating: number;
   vicinity: string;
   place_id: string;
 }
 
-
 export interface Restaurant {
   name: string;
   address: string;
+  place_id: string;
+  rating: number;
   photo?: string | undefined;
   type?: string | undefined;
   reviews?: Review[];
-  place_id: string;
-  rating: number;
 }
 export type RestaurantsList = Restaurant[];
 

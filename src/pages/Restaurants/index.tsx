@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getClosestRestaurantsByLocation } from '../../api/userController';
-import { Restaurant, RestaurantsList } from '@utils/types';
+import { RestaurantsList, Review } from '@utils/types';
 
 export default function RestaurantFinder() {
   const { state } = useLocation();
@@ -26,19 +26,20 @@ export default function RestaurantFinder() {
         {state.address}
       </Typography>
 
-      <div>
-        {restaurants?.map(({name, rating, address, place_id, type, photo}) => (
-          <RestaurantCard
-            name={name}
-            rating={rating}
-            address={address}
-            place_id={place_id}
-            key={place_id}
-            type={type}
-            photo={photo}
-          />
-        ))}
-      </div>
+      {restaurants?.map(
+        ({ name, rating, address, place_id, type, photo, reviews }) => (
+          <>
+            <RestaurantCard
+              name={name}
+              rating={rating}
+              address={address}
+              place_id={place_id}
+            />
+          </>
+        )
+      )}
+
+      {/* <ModalReviews data={data}></ModalReviews> */}
     </>
   );
 }

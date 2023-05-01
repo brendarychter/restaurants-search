@@ -13,37 +13,34 @@ const RestaurantCard = ({
   name,
   rating,
   address,
-  place_id,
-  photo,
-  type
+  place_id
 }: Restaurant): JSX.Element => {
-  return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardContent>
-        <Typography gutterBottom variant="body1" component="div">
-          {name}
-        </Typography>
-        <Typography gutterBottom variant="body2" component="div">
-          {address}
-        </Typography>
-        {type && (
-          <Typography gutterBottom variant="body2" component="div">
-            {type}
-          </Typography>
-        )}
 
-        <Rating
-          name="text-feedback"
-          value={rating}
-          readOnly
-          precision={0.5}
-          emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
-        />
-      </CardContent>
-      <CardActions>
-        <Button size="small">See more</Button>
-      </CardActions>
-    </Card>
+  return (
+    <>
+      <Card sx={{ maxWidth: 345 }} key={place_id}>
+        <CardContent>
+          <Typography gutterBottom variant="body1" component="div">
+            {name}
+          </Typography>
+          <Typography gutterBottom variant="body2" component="div">
+            {address}
+          </Typography>
+          <Rating
+            name="text-feedback"
+            value={rating}
+            readOnly
+            precision={0.5}
+            emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+          />
+        </CardContent>
+        <CardActions>
+          <Button size="small">
+            See more
+          </Button>
+        </CardActions>
+      </Card>
+    </>
   );
 };
 
