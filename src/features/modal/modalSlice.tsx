@@ -10,6 +10,7 @@ interface ModalState {
     place_id: string;
     reviews?: Review[];
     type?: string;
+    photo?: string;
   };
 }
 
@@ -21,7 +22,8 @@ const initialState: ModalState = {
     address: '',
     place_id: '',
     reviews: undefined,
-    type: ''
+    type: '',
+    photo: ''
   },
 };
 
@@ -41,7 +43,8 @@ export const modalSlice = createSlice({
         address: '',
         place_id: '',
         reviews: undefined,
-        type: ''
+        type: '',
+        photo: ''
       };
     },
   },

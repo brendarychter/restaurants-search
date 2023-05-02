@@ -3,7 +3,7 @@ import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import { closeModal } from '../features/modal/modalSlice';
-import {Rating, List, ListItem, Divider, ListItemText} from '@mui/material';
+import { Rating, List, ListItem, Divider, ListItemText, CardMedia } from '@mui/material';
 import { RootState } from 'store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Star } from '@mui/icons-material';
@@ -12,7 +12,7 @@ export default function ModalReviews() {
   const dispatch = useDispatch();
   const {
     showModal,
-    modalProps: { name, rating, address, type, reviews }
+    modalProps: { name, rating, address, type, reviews, photo }
   } = useSelector((state: RootState) => state.modal);
 
   const handleCloseModal = () => {
@@ -26,7 +26,13 @@ export default function ModalReviews() {
         aria-describedby="modal-desc"
         open={showModal}
         onClose={() => handleCloseModal()}
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          top: '5vh',
+          bottom: '5vh'
+        }}
       >
         <Sheet
           variant="outlined"
@@ -34,18 +40,22 @@ export default function ModalReviews() {
             maxWidth: 500,
             borderRadius: 'md',
             p: 3,
-            boxShadow: 'lg'
+            boxShadow: 'lg',
+            maxHeight: '90vh',
+            overflowY: 'auto'
           }}
         >
           <ModalClose
             variant="outlined"
             sx={{
-              top: 'calc(-1/4 * var(--IconButton-size))',
-              right: 'calc(-1/4 * var(--IconButton-size))',
-              boxShadow: '0 2px 12px 0 rgba(0 0 0 / 0.2)',
-              borderRadius: '50%',
-              bgcolor: 'background.body'
+              position: 'absolute',
+              top: '0px',
+              right: '0px',
+              m: 1,
+              zIndex: 1,
+              color: 'text.primary'
             }}
+            onClick={handleCloseModal}
           />
           <Typography
             component="h2"
@@ -57,52 +67,65 @@ export default function ModalReviews() {
           >
             {name}
           </Typography>
-          <Typography id="modal-desc" textColor="text.tertiary">
-            {type}
-          </Typography>
-          <Typography id="modal-desc" textColor="text.tertiary">
-            <Rating
-              name="text-feedback"
-              value={rating}
-              readOnly
-              precision={0.5}
-              emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
-            />
-            ({rating})
-          </Typography>
-          <Typography id="modal-desc" textColor="text.tertiary">
+          <CardMedia component="img" height="194" image={photo} alt={name} />
+          {type && (
+            <Typography id="modal-desc" textColor="text.tertiary">
+              {type}
+            </Typography>
+          )}
+          {rating && (
+            <Typography id="modal-desc" textColor="text.tertiary">
+              <Rating
+                name="text-feedback"
+                value={rating}
+                readOnly
+                precision={0.5}
+                emptyIcon={
+                  <Star style={{ opacity: 0.55 }} fontSize="inherit" />
+                }
+              />
+              ({rating})
+            </Typography>
+          )}
+          <Typography id="modal-desc" textColor="text.tertiary" component="h4">
             {address}
           </Typography>
 
           {/* TODO: mostrar item si hay reviews */}
-          <Typography id="modal-desc" textColor="text.tertiary">
-            Reviews:
-          </Typography>
-          <List
-            sx={{
-              width: '100%',
-              maxWidth: 360,
-              bgcolor: 'background.paper'
-            }}
-          >
-            {reviews &&
-              reviews?.map((review) => (
-                <>
-                  {' '}
-                  <ListItem alignItems="flex-start">
-                    <ListItemText
-                      primary={review.author_name}
-                      secondary={
-                        <>
-                          {review.text}
-                        </>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </>
-              ))}
-          </List>
+          {reviews && reviews.length > 0 ? (
+            <>
+              <Typography
+                id="modal-desc"
+                textColor="text.tertiary"
+                component="span"
+              >
+                Reviews
+              </Typography>
+              <List
+                sx={{
+                  width: '100%',
+                  maxWidth: 360,
+                  bgcolor: 'background.paper'
+                }}
+              >
+                {reviews &&
+                  reviews?.map((review, index) => (
+                    <>
+                      {' '}
+                      <ListItem alignItems="flex-start" key={index}>
+                        <ListItemText
+                          primary={review.author_name}
+                          secondary={<>{review.text}</>}
+                        />
+                      </ListItem>
+                      <Divider variant="inset" component="li" />
+                    </>
+                  ))}
+              </List>
+            </>
+          ) : (
+            <Typography>There are no reviews for this place yet.</Typography>
+          )}
         </Sheet>
       </Modal>
     </>

@@ -43,7 +43,7 @@ const extractProps = async (
 ): Promise<RestaurantsList> => {
   const restaurants = data.map(async (res: GmapsRestaurantData) => {
     const { name, vicinity, types, photos, rating, place_id } = res;
-    const photo = photos?.length
+    const photo = photos && photos?.length
       ? getPhotoUrl(photos[0].photo_reference)
       : undefined;
     const reviews = await getReviews(place_id);
@@ -81,14 +81,16 @@ export const getClosestRestaurantsByLocation = async ({
 };
 
 export const getPhotoUrl = async (ref: string) => {
-  const PHOTO_URL = `https://cors-anywhere.herokuapp.com/${GOOGLE_API_ENDPOINT}/place/photo?maxwidth=400&photo_reference=${ref}&key=${API_KEY}`;
+  const PHOTO_URL = `${GOOGLE_API_ENDPOINT}/place/photo?maxwidth=400&photo_reference=${ref}&key=${API_KEY}`;
   try {
-    const response = await fetch(PHOTO_URL);
-    if (!response.ok) {
-      throw new Error('Unable to fetch restaurant photo');
-    }
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
+    const response = await fetch(`https://cors-anywhere.herokuapp.com/${PHOTO_URL}`, {
+      headers: {
+        'Origin': 'https://cors-anywhere.herokuapp.com',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+    const photo_url_string = response.url;
+    return photo_url_string;
   } catch (error) {
     console.error('Error fetching restaurant photo:', error);
     throw error;
@@ -109,9 +111,6 @@ export const getReviews = async (place_id: string) => {
           return { author_name, text };
         });
     }
-    //  else {
-    //   return [];
-    // }
   } catch (error) {
     console.error('Error fetching restaurant photo:', error);
     throw error;

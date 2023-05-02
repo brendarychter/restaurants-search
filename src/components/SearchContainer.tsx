@@ -1,7 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, CircularProgress, Theme, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Theme,
+  Typography,
+  Box
+} from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import Autocomplete from 'react-google-autocomplete';
 import {
@@ -52,22 +58,31 @@ export default function SearchContainer() {
       dispatch(getLocationFailure('Location not found'));
     }
   };
-  
+
   return (
     <>
-      <Autocomplete
-        style={{ width: '100%' }}
-        apiKey={API_KEY}
-        onPlaceSelected={placeSelection}
-        placeholder="Enter a city or an address"
-        inputAutocompleteValue=''
-        options={{
-          types: ['geocode']
-        }}
-      />
-      <Button variant="text" onClick={getCurrentLocation}>
-        Use my current location
-      </Button>
+      <Box sx={{ marginBottom: '1em', margin: '0 auto' }}>
+        <Autocomplete
+          style={{ width: '80%', height: '20px' }}
+          apiKey={API_KEY}
+          onPlaceSelected={placeSelection}
+          placeholder="Enter a city or an address"
+          inputAutocompleteValue=""
+          options={{
+            types: ['geocode']
+          }}
+        />
+        <Button
+          variant="text"
+          onClick={getCurrentLocation}
+          sx={{
+            fontWeight: 'bolder',
+            fontFamily: 'Roboto'
+          }}
+        >
+          Use my location
+        </Button>
+      </Box>
       <Backdrop
         sx={{
           color: '#fff',

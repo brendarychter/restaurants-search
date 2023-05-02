@@ -29,7 +29,8 @@ const RestaurantCard = ({
       address,
       place_id,
       type,
-      reviews
+      reviews,
+      photo
     };
     dispatch(openModal(modalProps));
   };
@@ -52,9 +53,9 @@ const RestaurantCard = ({
             emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
           />
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ justifyContent: 'center' }}>
           <Button size="small" onClick={handleOpenModal}>
-              See more
+            See more
           </Button>
         </CardActions>
       </Card>

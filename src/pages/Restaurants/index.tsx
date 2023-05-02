@@ -1,9 +1,14 @@
 import SearchContainer from '../../components/SearchContainer';
 import RestaurantCard from '../../components/RestaurantCard';
-import { Theme, Typography, CircularProgress } from '@mui/material';
+import {
+  Theme,
+  Typography,
+  CircularProgress,
+  Backdrop,
+  Grid
+} from '@mui/material';
 import { useEffect } from 'react';
 import { getClosestRestaurantsByLocation } from '../../api/userController';
-import Backdrop from '@mui/material/Backdrop';
 import {
   getRestaurantsStart,
   getRestaurantsFailure,
@@ -21,10 +26,6 @@ export default function RestaurantFinder() {
   const { data, loading } = useSelector(
     (state: RootState) => state.restaurants
   );
-
-  useEffect(() => {
-    console.log(showModal);
-  }, [showModal]);
 
   useEffect(() => {
     // TODO: Check if I can use useCallback
@@ -46,7 +47,6 @@ export default function RestaurantFinder() {
 
   return (
     <>
-      <SearchContainer></SearchContainer>
       {loading ? (
         <>
           <Backdrop
@@ -63,29 +63,50 @@ export default function RestaurantFinder() {
         </>
       ) : (
         <>
-          <Typography gutterBottom variant="h5" component="div">
+          <SearchContainer />
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{
+              fontWeight: 'bolder',
+              fontFamily: 'Rubik'
+            }}
+          >
             {location?.address}
           </Typography>
-          {location &&
-            data?.map(
-              ({ name, rating, address, place_id, reviews, photo, type }) => (
-                <>
-                  <RestaurantCard
-                    name={name}
-                    rating={rating}
-                    address={address}
-                    place_id={place_id}
-                    key={place_id}
-                    reviews={reviews}
-                    photo={photo}
-                    type={type}
-                  />
-                </>
-              )
-            )}
+          {location && data ? (
+            <Grid
+              container
+              justifyContent="center"
+              sx={{ flexGrow: 1, margin: '0 auto' }}
+              spacing={2}
+              alignItems="center"
+            >
+              {data?.map(
+                ({ name, rating, address, place_id, reviews, photo, type }) => (
+                  <Grid item xs={12} sm={4} key={place_id}>
+                    <RestaurantCard
+                      name={name}
+                      rating={rating}
+                      address={address}
+                      place_id={place_id}
+                      reviews={reviews}
+                      photo={photo}
+                      type={type}
+                    />
+                  </Grid>
+                )
+              )}
+            </Grid>
+          ) : (
+            <Typography variant="h5" component="div">
+              No restaurants found for that location
+            </Typography>
+          )}
         </>
       )}
-      {showModal && <ModalReviews></ModalReviews>}
+      {showModal && <ModalReviews />}
     </>
   );
 }
