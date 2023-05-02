@@ -91,7 +91,6 @@ export default function ModalReviews() {
             {address}
           </Typography>
 
-          {/* TODO: mostrar item si hay reviews */}
           {reviews && reviews.length > 0 ? (
             <>
               <Typography

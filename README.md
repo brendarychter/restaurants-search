@@ -31,7 +31,7 @@ Note: If you are running the application locally, please be aware that you may n
 **Clone the project**
 
 ```bash
-  git clone https://github.com/brendarychter/restaurants-search.git
+  git clone (https://github.com/brendarychter/restaurants-search.git)
 ```
 
 Go to the project directory
@@ -51,3 +51,13 @@ Start the server
 ```bash
   npm run dev
 ```
+
+## Next improvements
+
+Manage environments
+
+Responsive layout
+
+Placeholder when restaurant images don't exist
+
+Create more optimized components
