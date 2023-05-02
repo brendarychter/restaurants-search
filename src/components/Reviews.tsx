@@ -3,7 +3,14 @@ import ModalClose from '@mui/joy/ModalClose';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import { closeModal } from '../features/modal/modalSlice';
-import { Rating, List, ListItem, Divider, ListItemText, CardMedia } from '@mui/material';
+import {
+  Rating,
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
+  CardMedia
+} from '@mui/material';
 import { RootState } from 'store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Star } from '@mui/icons-material';
@@ -67,9 +74,15 @@ export default function ModalReviews() {
           >
             {name}
           </Typography>
-          <CardMedia component="img" height="194" image={photo} alt={name} />
+          {photo && (
+            <CardMedia component="img" height="194" image={photo} alt={name} />
+          )}
           {type && (
-            <Typography id="modal-desc" textColor="text.tertiary">
+            <Typography
+              id="modal-desc"
+              textColor="text.tertiary"
+              sx={{ textTransform: 'capitalize' }}
+            >
               {type}
             </Typography>
           )}

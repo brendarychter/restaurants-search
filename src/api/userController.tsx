@@ -1,4 +1,4 @@
-import { API_KEY, GOOGLE_API_ENDPOINT } from '../utils/config';
+import { API_KEY, GOOGLE_API_ENDPOINT, HEROKU_API_ENDPOINT } from '../utils/config';
 import {
   Location,
   GmapsRestaurantData,
@@ -80,25 +80,12 @@ export const getClosestRestaurantsByLocation = async ({
   }
 };
 
-export const getPhotoUrl = async (ref: string) => {
-  const PHOTO_URL = `${GOOGLE_API_ENDPOINT}/place/photo?maxwidth=400&photo_reference=${ref}&key=${API_KEY}`;
-  try {
-    const response = await fetch(`https://cors-anywhere.herokuapp.com/${PHOTO_URL}`, {
-      headers: {
-        'Origin': 'https://cors-anywhere.herokuapp.com',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    });
-    const photo_url_string = response.url;
-    return photo_url_string;
-  } catch (error) {
-    console.error('Error fetching restaurant photo:', error);
-    throw error;
-  }
+export const getPhotoUrl =  (ref: string) => {
+  return `${GOOGLE_API_ENDPOINT}/place/photo?maxwidth=400&photo_reference=${ref}&key=${API_KEY}`;
 };
 
 export const getReviews = async (place_id: string) => {
-  const REVIEWS_URL = `https://cors-anywhere.herokuapp.com/${GOOGLE_API_ENDPOINT}/place/details/json?place_id=${place_id}&key=${API_KEY}`;
+  const REVIEWS_URL = `${HEROKU_API_ENDPOINT}${GOOGLE_API_ENDPOINT}/place/details/json?place_id=${place_id}&key=${API_KEY}`;
 
   try {
     const response = await fetch(REVIEWS_URL);

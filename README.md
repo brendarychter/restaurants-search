@@ -1,6 +1,6 @@
 # Small restaurants website
 
-This project is a web application that displays a list of 10 restaurants near the user's chosen location,current location, it can also be searched by address, city or country. Taste it :) [here](https://restaurants-search-git-layout-brendarychter.vercel.app/)
+This project is a web application that displays a list of 10 restaurants near the user's chosen location,current location, it can also be searched by address, city or country. Taste it :) by following the steps below
 
 ## Tech Stack
 
@@ -22,7 +22,7 @@ To run this project, you will need to add the following environment variables to
 
 `VITE_REACT_GOOGLE_MAPS_API_KEY`
 
-Email me for get access to the Api Keys.
+Email me for get access to the Api Key value.
 
 ## Run Locally
 
@@ -54,10 +54,16 @@ Start the server
 
 ## Next improvements
 
-Manage environments
-
-Responsive layout
-
-Placeholder when restaurant images don't exist
+Improve responsive layout
 
 Create more optimized components
+
+Manage environments and handling cors
+
+Proper connection with Vercel by fixing vite config
+
+Tests with Jest
+
+## New features coming soon
+
+Save favorite restaurants
