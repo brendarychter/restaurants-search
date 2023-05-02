@@ -32,7 +32,7 @@ export default function SearchContainer() {
         navigate(`/search`);
       } catch (error) {
         dispatch(
-          getLocationFailure(`Error setting current location: ${error}`)
+          getLocationFailure(`${error}`)
         );
       }
     };
