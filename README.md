@@ -31,7 +31,7 @@ Note: If you are running the application locally, please be aware that you may n
 Install dependencies
 
 ```bash
-  git clone [github.com/brendarychter/restaurants-search.git](https://github.com/brendarychter/restaurants-search.git)
+  git clone https://github.com/brendarychter/restaurants-search.git
 ```
 
 Go to the project directory
