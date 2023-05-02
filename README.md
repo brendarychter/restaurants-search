@@ -28,10 +28,10 @@ Email me for get access to the Api Key value.
 
 Note: If you are running the application locally, please be aware that you may need a CORS extension to avoid an error. However, this is not a problem in the hosted version.
 
-**Clone the project**
+Install dependencies
 
 ```bash
-  git clone (https://github.com/brendarychter/restaurants-search.git)
+  git clone https://github.com/brendarychter/restaurants-search.git
 ```
 
 Go to the project directory
