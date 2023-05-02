@@ -1,8 +1,6 @@
 export type Review = {
   author_name: string;
   text: string;
-  rating: number;
-  id: string;
 };
 export type Reviews = Review[];
 

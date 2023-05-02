@@ -8,13 +8,31 @@ import {
   Rating
 } from '@mui/material';
 import { Star } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { openModal } from '../features/modal/modalSlice';
 
 const RestaurantCard = ({
   name,
   rating,
   address,
-  place_id
+  place_id,
+  reviews,
+  photo,
+  type
 }: Restaurant): JSX.Element => {
+  const dispatch = useDispatch();
+
+  const handleOpenModal = () => {
+    const modalProps = {
+      name,
+      rating,
+      address,
+      place_id,
+      type,
+      reviews
+    };
+    dispatch(openModal(modalProps));
+  };
 
   return (
     <>
@@ -35,8 +53,8 @@ const RestaurantCard = ({
           />
         </CardContent>
         <CardActions>
-          <Button size="small">
-            See more
+          <Button size="small" onClick={handleOpenModal}>
+              See more
           </Button>
         </CardActions>
       </Card>

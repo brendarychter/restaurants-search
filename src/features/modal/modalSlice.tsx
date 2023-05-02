@@ -1,43 +1,52 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Restaurant } from '@utils/types';
-
-interface RestaurantsState {
-  data: Restaurant[];
-  loading: boolean;
-  error: string | null;
+import { Review } from '@utils/types';
+//TODO: do not associate modal with specific data
+interface ModalState {
+  showModal: boolean;
+  modalProps: {
+    name: string;
+    rating: number;
+    address: string;
+    place_id: string;
+    reviews?: Review[];
+    type?: string;
+  };
 }
 
-const initialState: RestaurantsState = {
-  data: [],
-  loading: false,
-  error: null
+const initialState: ModalState = {
+  showModal: false,
+  modalProps: {
+    name: '',
+    rating: 0,
+    address: '',
+    place_id: '',
+    reviews: undefined,
+    type: ''
+  },
 };
 
-const modalSlice = createSlice({
-  name: 'restaurants',
+export const modalSlice = createSlice({
+  name: 'modal',
   initialState,
   reducers: {
-    getRestaurantsStart(state) {
-      state.loading = true;
-      state.error = null;
+    openModal: (state, action: PayloadAction<ModalState['modalProps']>) => {
+      state.showModal = true;
+      state.modalProps = action.payload;
     },
-    getRestaurantsSuccess(state, action: PayloadAction<Restaurant[]>) {
-      state.data = action.payload;
-      state.loading = false;
-      state.error = null;
+    closeModal: (state) => {
+      state.showModal = false;
+      state.modalProps = {
+        name: '',
+        rating: 0,
+        address: '',
+        place_id: '',
+        reviews: undefined,
+        type: ''
+      };
     },
-    getRestaurantsFailure(state, action: PayloadAction<string>) {
-      state.data = [];
-      state.loading = false;
-      state.error = action.payload;
-    }
-  }
+  },
 });
 
-export const {
-  getRestaurantsStart,
-  getRestaurantsSuccess,
-  getRestaurantsFailure
-} = modalSlice.actions;
+export const { openModal, closeModal } = modalSlice.actions;
 
 export default modalSlice.reducer;

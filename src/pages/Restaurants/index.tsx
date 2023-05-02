@@ -11,14 +11,20 @@ import {
 } from '../../features/restaurants/restaurantsSlice';
 import { RootState } from 'store/store';
 import { useDispatch, useSelector } from 'react-redux';
+import ModalReviews from '../../components/Reviews';
 
 export default function RestaurantFinder() {
   const dispatch = useDispatch();
   const location = useSelector((state: RootState) => state.location.data);
+  const showModal = useSelector((state: RootState) => state.modal.showModal);
 
   const { data, loading } = useSelector(
     (state: RootState) => state.restaurants
   );
+
+  useEffect(() => {
+    console.log(showModal);
+  }, [showModal]);
 
   useEffect(() => {
     // TODO: Check if I can use useCallback
@@ -44,7 +50,7 @@ export default function RestaurantFinder() {
       {loading ? (
         <>
           <Backdrop
-          // TODO: Componentize this
+            // TODO: Componentize this
             sx={{
               color: '#fff',
               zIndex: (theme: Theme) => theme.zIndex.drawer + 1
@@ -61,20 +67,25 @@ export default function RestaurantFinder() {
             {location?.address}
           </Typography>
           {location &&
-            data?.map(({ name, rating, address, place_id }) => (
-              <>
-                <RestaurantCard
-                  name={name}
-                  rating={rating}
-                  address={address}
-                  place_id={place_id}
-                />
-              </>
-            ))}
+            data?.map(
+              ({ name, rating, address, place_id, reviews, photo, type }) => (
+                <>
+                  <RestaurantCard
+                    name={name}
+                    rating={rating}
+                    address={address}
+                    place_id={place_id}
+                    key={place_id}
+                    reviews={reviews}
+                    photo={photo}
+                    type={type}
+                  />
+                </>
+              )
+            )}
         </>
       )}
-
-      {/* <ModalReviews data={data}></ModalReviews> */}
+      {showModal && <ModalReviews></ModalReviews>}
     </>
   );
 }

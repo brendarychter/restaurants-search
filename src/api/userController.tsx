@@ -105,8 +105,8 @@ export const getReviews = async (place_id: string) => {
     if (reviews && reviews.length > 0) {
       return reviews
         .slice(0, 10)
-        .map(({ author_name, text, rating }: Review) => {
-          return { author_name, text, rating };
+        .map(({ author_name, text }: Review) => {
+          return { author_name, text };
         });
     }
     //  else {
